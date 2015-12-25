@@ -9,8 +9,8 @@ import os
 
 
 class IdentityAccessManagement():
-    admin_access_key = "AKIAJHURBM3YVB5TORAA"
-    admin_secret_key = "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"
+    admin_access_key = "XXXXXXXXXXXXXXXXXXXXXXX"
+    admin_secret_key = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 
     def create_user(self, s3_user):
         connect = IAMConnection(self.admin_access_key, self.admin_secret_key)
