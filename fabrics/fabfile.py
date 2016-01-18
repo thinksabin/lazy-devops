@@ -1,24 +1,37 @@
 #!/usr/bin/python
-__author__ = 'thinksabin'
-
 #Execute the script with the following command:
 #    fab -i /location/to/ssh/key--port 22 -H frog@subisu.lftechnology.com create
+
+__author__ = 'thinksabin'
+
+import getpass
+import os
+import socket
 
 from fabric.api import *
 
 
 # Editable Config
-local_user = "sabin" # local user of the workstation from which this fabfile is run
-ssh_user = "ubuntu" # username used to ssh to the remote machine
-key_dir = "/home/sabin/keys/" # the location where the keys are to be copied in the local workstation
+
+#ssh_user = "ubuntu"
+
+home_dir = os.environ['HOME']
+
+# the location where the keys are to be copied in the local workstation
+key_dir = home_dir +"/keys/"
+
+#local_user = "sabin" # local user of the workstation from which this fabfile is run
+local_user = getpass.getuser()
 
 
 def create():
+    # username used to ssh to the remote machine
+    ssh_user = prompt("Enter Username to ssh into the remote machine (eg:root, ubuntu, ec2-user):")
     choice = ""
-    while choice != ("N" or "n" or "No"):
-        print "\n\n-------------  Creating user on %s  -------------\n"
+    while choice != "NO":
+        print "\n\n-------------  Creating user on remote machine %s  -------------\n"
         username = prompt("Enter Username to create:")
-        
+
         print username
         try:
             sudo("adduser %s" %username)
@@ -59,7 +72,8 @@ def create():
                     print(" Couldnt Grant Sudo Access to %s" %username)
                     pass
             else:
-                print("No access given to %s" %username)
+                print("No sudo access given to %s" %username)
+
         print "\n------------- Downloading Keys -------------\n"
         get("/home/Keys/%s.*" %username,"/tmp")
 
@@ -67,5 +81,10 @@ def create():
         local("mv /tmp/%s.* %s" %(username,key_dir))
         print "\n\n------------- Key files downloaded to %s   -------------\n" %key_dir
 
-        choice = prompt("Do you want to create another user (Y/N):")
+        choice = prompt("Do you want to create another user (Y/n):")
+        if choice == "N" or choice =="n" or choice == "no" or choice== "No":
+            break
+        else:
+            continue
+
     print "\n------------- Thank you  -------------\n"
