@@ -16,7 +16,6 @@ from fabric.api import *
 # ssh_user = "ubuntu"
 
 home_dir = os.environ['HOME']
-env.port = 22
 local_user = getpass.getuser()
 
 # the location where the keys are to be copied in the local workstation
